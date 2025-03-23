@@ -13,7 +13,7 @@ let numberAtive = false;
 
 function setDefault() {
   inputValue.textContent = "0";
-  num1 = null;
+  num1 = 0;
   num2 = null;
   operator = null;
   isNum2 = false;
@@ -31,10 +31,8 @@ buttons.forEach((button) => {
       case "*":
       case "/":
         if (!isNum2) {
-          num1 = inputValue.textContent;
           isNum2 = true;
         } else {
-          num2 = inputValue.textContent;
           isNum2 = false;
           if (numEntered) {
             inputValue.textContent = operate(num1, num2, operator);
@@ -44,11 +42,14 @@ buttons.forEach((button) => {
         }
         operatorActive = true;
         operator = button.textContent;
+
         return;
       case "=":
-        num2 = inputValue.textContent;
         if (num1 !== null && num2 !== null && operator !== null) {
           inputValue.textContent = operate(num1, num2, operator);
+          num1 = inputValue.textContent;
+          isNum2 = false;
+          operatorActive = false;
         }
         return;
       case "DEL":
@@ -71,19 +72,27 @@ buttons.forEach((button) => {
           inputValue.textContent += button.textContent;
         }
         return;
-
+      case "%":
+        inputValue.textContent = Number (inputValue.textContent) / 100;
+        return;
       default:
         numEntered = true;
+
         if (inputValue.textContent === "0") {
-          inputValue.textContent = "";
-        }
-
-        if (operatorActive) {
-          inputValue.textContent = "";
+          inputValue.textContent = button.textContent;
+        } else if (operatorActive) {
+          inputValue.textContent = button.textContent;
           operatorActive = false;
+        } else {
+          inputValue.textContent += button.textContent;
         }
 
-        inputValue.textContent += button.textContent;
+        if (!isNum2) {
+          num1 = inputValue.textContent;
+        } else {
+          num2 = inputValue.textContent;
+        }
+        return;
     }
   });
 });
